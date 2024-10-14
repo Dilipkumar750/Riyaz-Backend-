@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 
 router.post('/service-cards',upload.single('imageurl'),  serviceCardController.createServiceCard);
 router.get('/servicecard/:id', serviceCardController.getCardById);
-router.put('/servicecards/:id', serviceCardController.updateServiceCard);
+router.put('/servicecards/:id',upload.single('imageurl'), serviceCardController.updateServiceCard);
 
 router.get('/service-cards/:id', serviceCardController.getServiceCard);
 
