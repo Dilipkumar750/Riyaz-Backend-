@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 exports.createServiceCard = async (req, res) => {
   try {
     const { heading, description, imageurl } = req.body;
-    console.log(heading, description, imageurl)
+    // console.log(heading, description, imageurl)
     const newServiceCard = new ServiceCard({ heading, description, imageurl });
     await newServiceCard.save();
     res.status(201).json({
