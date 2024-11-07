@@ -7,7 +7,7 @@ const serviceCardSchema = new mongoose.Schema(
       required: true,
     },
     description: {
-      paragragh: { type: String },
+      paragraph: { type: String },
       features: [{ type: String }],
       listType: { type: String, enum: ["disc", "number", "star"] },
     },
