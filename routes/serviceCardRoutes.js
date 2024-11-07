@@ -27,7 +27,7 @@ router.put('/servicecards/:id',upload.single('imageurl'), serviceCardController.
 router.get('/service-cards/:id', serviceCardController.getServiceCard);
 
 router.get('/service-cards', serviceCardController.getAllServiceCards);
-
+router.delete('/delete/:id', serviceCardController.deleteServiceCard);
 
 
 module.exports = router;
