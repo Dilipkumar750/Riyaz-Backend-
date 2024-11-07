@@ -7,15 +7,27 @@ const mongoose = require('mongoose');
 exports.createServiceCard = async (req, res) => {
   try {
     const { heading, description, imageurl } = req.body;
-    // console.log(heading, description, imageurl)
-    const newServiceCard = new ServiceCard({ heading, description, imageurl });
+
+    // Parse the 'description' string into an object (if it's a stringified object)
+    const parsedDescription = description ? JSON.parse(description) : null;
+
+    // Check if the required fields are present
+    if (!heading || !parsedDescription || !parsedDescription.paragraph || !imageurl) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // const { paragraph, features, listType } = parsedDescription;
+// console.log(heading, paragraph, features, listType,imageurl)
+    // Assuming you have a model to save the data, e.g., ServiceCard
+    const newServiceCard = new ServiceCard({ heading, description: parsedDescription, imageurl });
     await newServiceCard.save();
+
     res.status(201).json({
-      message: `Service card created successfully with heading: ${newServiceCard.heading}`,
-      newServiceCard,
+      message: `Service card created successfully with heading: ${heading}`,
+      newServiceCard
     });
   } catch (err) {
-    console.log(err)
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -48,8 +60,6 @@ exports.getServiceCard = async (req, res) => {
   }
 };
 
-
-
 //working code
 exports.getAllServiceCards = async (req, res) => {
   try {
@@ -62,10 +72,13 @@ exports.getAllServiceCards = async (req, res) => {
 //working code
 exports.updateServiceCard = async (req, res) => {
   const { id } = req.params;
-  const updatedData = req.body;
+  const { heading, description, imageurl } = req.body;
+
+  // Parse the 'description' string into an object (if it's a stringified object)
+  const parsedDescription = description ? JSON.parse(description) : nu
 
   try {
-    const updatedCard = await ServiceCard.findByIdAndUpdate(id, updatedData, { new: true });
+    const updatedCard = await ServiceCard.findByIdAndUpdate(id, { heading, description: parsedDescription, imageurl }, { new: true });
     if (!updatedCard) {
       return res.status(404).json({ message: 'Service card not found' });
     }
@@ -78,4 +91,15 @@ exports.updateServiceCard = async (req, res) => {
   }
 };
 
+exports.deleteServiceCard = async (req,res) => {
+  try {
+    const { id } = req.params;
+    await ServiceCard.findByIdAndDelete(id)
+    res.status(200).json({
+      message: `service card deleted`,
+    });
 
+  } catch (error) {
+   return res.status(500).json({ message: 'Server error', error });
+  }
+}
